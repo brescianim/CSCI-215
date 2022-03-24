@@ -1,0 +1,129 @@
+<!--
+   Modify Tip Calculator
+
+   In this in-class exercise, you will modify your Tip Calculator application from Quiz #5 and
+   modify it to use an object instead of different variables.
+
+   The original solution used the following variables:
+
+   - amount - the user entered amount to calculate the tax for
+   - tipPercent - the value from the select list i.e. 15%
+   - tipAmount - the amount * tipPercent
+   - grandTotal - the amount + tipAmount
+
+   Your application should have the following elements:
+
+   - Define an object called 'tipCalculatorModel' with the attributes above.
+   - Create an onload event that initializes the object with appropriate default values.
+   - Modify your existing application to use the 'tipCalculatorModel' instead of different variables.
+
+-->
+<html>
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body onload="init()">
+    <div class = "container">
+        <div class = "col-3"></div>
+        <div class = "card-mt5" style = "background-color: #404040; color: #e3e3e3;">
+            <h1 style = "text-align: center;">Online Order</h1>
+            <div id="results">
+                <div id = "errorMsg" class = "alert alert-danger" style = "display: none;">The input must be a positive number!</div>
+                <div id = "amount" style = "padding: 20px;">
+                    <label for = "input" class = "form-label">Enter Amount</label>
+                    <div class = "input-group mb-3">
+                        <span class = "input-group-text" id = "basic-addon">$</span>
+                        <input type = "number" step = "0.01" min = "0.00" class = "form-control" id = "userAmount" placeholder = "0.00" onchange = "calculations()" required>
+                    </div>
+                </div>
+                <div id = "tip-percent" style = "padding: 20px;">
+                    <label for = "select" class = "form-label">Select a tip percent</label>
+                    <select class = "form-select" id = "tipPercent" onchange = "calculations()">
+                        <option value = 1 selected>5%</option>
+                        <option value = 2>10%</option>
+                        <option value = 3>15%</option>
+                    </select>
+                </div>
+                <div id = "tip-amount" style = "padding: 20px;">
+                    <label for = "input" class = "form-label">Tip Amount</label>
+                    <div class = "input-group mb-3">
+                        <span class = "input-group-text" id = "basic-addon">$</span>
+                        <input type = "number" step = "0.01" min = "0.00" class = "form-control" id = "tipAmount" placeholder = "0.00" disabled>
+                    </div>
+                </div>
+                <div id = "grand-total" style = "padding: 20px;">
+                    <label for = "input" class = "form-label">Grand Total</label>
+                    <div class = "input-group mb-3">
+                        <span class = "input-group-text" id = "basic-addon">$</span>
+                        <input type = "number" step = "0.01" min = "0.00" class = "form-control" id = "grandTotal" placeholder = "0.00" disabled>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class = "col-3"></div>
+    </div>
+<script type="text/javascript">
+
+    const tipCalculatorModel = {
+        "amount": null,
+        "tipPercent": null,
+        "tipAmount": null,
+        "grandTotal": null
+    };
+
+    /**
+     *  Create default values for your model
+     */
+    function init() {
+        tipCalculatorModel.amount = 0.00;
+        tipCalculatorModel.tipPercent = 0.00;
+        tipCalculatorModel.tipAmount = 0.00;
+        tipCalculatorModel.grandTotal = 0.00;
+    }
+
+    function checkForNegative() {
+        let isNegative = false;
+
+        if (tipCalculatorModel.amount < 0.00) {
+            isNegative = true;
+        }
+
+        return isNegative;
+    }
+
+    function percentToDecimal() {
+        let percentString = document.getElementById("tipPercent").options[document.getElementById("tipPercent").selectedIndex].text;
+        let percentWhole = percentString.slice(0, (percentString.length - 1));
+        let decimal = Number(percentWhole) / 100;
+
+        return decimal;
+    }
+
+    function updateVals() {
+        tipCalculatorModel.amount = document.getElementById("userAmount").value;
+        tipCalculatorModel.tipPercent = percentToDecimal();
+    }
+
+    function calculations() {
+        if (document.getElementById("errorMsg").style.display === "block") {
+            document.getElementById("errorMsg").style.display = "none"
+        }
+
+        let isNegative = checkForNegative();
+
+        if (isNegative === true) {
+            document.getElementById("errorMsg").style.display = "block";
+        } else if (isNegative === false) {
+            updateVals();
+
+            tipCalculatorModel.tipAmount = Number(tipCalculatorModel.amount) * tipCalculatorModel.tipPercent;
+            tipCalculatorModel.grandTotal = Number(tipCalculatorModel.amount) + tipCalculatorModel.tipAmount;
+
+            document.getElementById("tipAmount").value = tipCalculatorModel.tipAmount.toFixed(2);
+            document.getElementById("grandTotal").value = tipCalculatorModel.grandTotal.toFixed(2);
+        }
+    }
+
+</script>
+</body>
+</html>
