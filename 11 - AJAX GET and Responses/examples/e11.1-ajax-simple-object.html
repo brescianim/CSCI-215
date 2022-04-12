@@ -56,9 +56,13 @@
                 // convert the string response (in JSON format) into a JavaScript object
                 // person has the expected attributes of: firstName, lastName, occupation, age, born (birth city)
                 //TODO
-
+                const person = JSON.parse(this.responseText);
                 // update UI
                 //TODO
+                document.getElementById("personName").innerHTML = `${person.firstName} ${person.lastName}`;
+                document.getElementById("personOccupation").innerHTML = `${person.occupation}`;
+                document.getElementById("personAge").innerHTML = `${person.age}`;
+                document.getElementById("personBorn").innerHTML = `${person.born}`;
             }
         };
         ajaxRequest.open("GET", "https://tcmoorer.people.cofc.edu/CSCI215/Spring2022/11/e11.1-simple-object.php");
